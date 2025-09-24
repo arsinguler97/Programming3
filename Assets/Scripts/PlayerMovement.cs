@@ -6,11 +6,13 @@ public class PlayerMovement : MonoBehaviour
     private CharacterController _controller;
     private Vector2 _move;
     private Vector3 _velocity;
-    private float _speed = 5f;
-    private float _rotationSpeed = 10f;
-    private float _gravity = -9.81f;
-    private float _jumpHeight = 2f;
+    private bool _isSprinting;
 
+    [SerializeField] private float speed = 5f;
+    [SerializeField] private float sprintMultiplier = 2f;
+    [SerializeField] private float rotationSpeed = 10f;
+    [SerializeField] private float gravity = -9.81f;
+    [SerializeField] private float jumpHeight = 2f;
     [SerializeField] private Transform cameraTransform;
 
     void Awake()
@@ -22,13 +24,27 @@ public class PlayerMovement : MonoBehaviour
     {
         _move = context.ReadValue<Vector2>();
     }
+    
 
     public void SetJump(InputAction.CallbackContext context)
     {
         if (context.performed && _controller.isGrounded)
         {
-            Debug.Log("Jump triggered");
-            _velocity.y = Mathf.Sqrt(_jumpHeight * -2f * _gravity);
+            _velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+        }
+    }
+
+    public void SetSprint(InputAction.CallbackContext context)
+    {
+        if (context.started) _isSprinting = true;
+        if (context.canceled) _isSprinting = false;
+    }
+    
+    public void SetAttack(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            GetComponentInChildren<PlayerAttack>()?.TryAttack();
         }
     }
 
@@ -59,15 +75,16 @@ public class PlayerMovement : MonoBehaviour
         if (move.magnitude > 0.1f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(move);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
 
-        _controller.Move(move * (_speed * Time.deltaTime));
+        float currentSpeed = _isSprinting ? speed * sprintMultiplier : speed;
+        _controller.Move(move * (currentSpeed * Time.deltaTime));
 
         if (_controller.isGrounded && _velocity.y < 0)
             _velocity.y = -2f;
 
-        _velocity.y += _gravity * Time.deltaTime;
+        _velocity.y += gravity * Time.deltaTime;
         _controller.Move(_velocity * Time.deltaTime);
     }
 }
