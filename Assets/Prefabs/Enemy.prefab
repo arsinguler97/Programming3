@@ -250,6 +250,7 @@ GameObject:
   - component: {fileID: 3191655140922098085}
   - component: {fileID: 7987583133356543800}
   - component: {fileID: 6443177114004474579}
+  - component: {fileID: 4229787493465009880}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -387,13 +388,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8498a240c598cd44ab6c26eb7cc3c3db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStateManager
-  playerChecker: {fileID: 3191655140922098085}
+  targetChecker: {fileID: 3191655140922098085}
   enemyController: {fileID: 7987583133356543800}
-  patrolWaypoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   attackRange: 2
   attackCooldown: 2
   chaseSpeed: 5
@@ -410,12 +406,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f003f9ec539d53242b8480f601b17943, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerChecker
-  viewRadius: 30
-  viewAngle: 120
   playerTransform: {fileID: 0}
+  baseTransform: {fileID: 0}
   obstacleMask:
     serializedVersion: 2
     m_Bits: 8
+  viewRadius: 30
+  viewAngle: 120
 --- !u!114 &7987583133356543800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -456,6 +453,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 64
   m_CollisionDetection: 1
+--- !u!114 &4229787493465009880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2792136615368162337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86fd675f23ac33044a6acd3b091ad999, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  enemyMaxHealth: 100
 --- !u!1 &3802229609608054719
 GameObject:
   m_ObjectHideFlags: 0

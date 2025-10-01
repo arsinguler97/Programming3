@@ -22,12 +22,26 @@ public class EnemyAttackState : IState
 
     public void Update()
     {
-        if (!_enemyStateManager.PlayerChecker.IsPlayerInAttackRange(_enemyStateManager.AttackRange))
+        bool baseInRange = _enemyStateManager.TargetChecker.IsBaseInAttackRange(_enemyStateManager.AttackRange);
+        bool playerInRange = _enemyStateManager.TargetChecker.IsPlayerInAttackRange(_enemyStateManager.AttackRange);
+
+        if (baseInRange)
         {
-            _enemyStateManager.ChangeState(_enemyStateManager.EnemyChaseState);
+            HandleAttack();
             return;
         }
 
+        if (playerInRange)
+        {
+            HandleAttack();
+            return;
+        }
+
+        _enemyStateManager.ChangeState(_enemyStateManager.EnemyChaseState);
+    }
+    
+    private void HandleAttack()
+    {
         _attackTimer -= Time.deltaTime;
         if (_attackTimer <= 0f)
         {
@@ -35,6 +49,6 @@ public class EnemyAttackState : IState
             _attackTimer = _enemyStateManager.AttackCooldown;
         }
     }
-
+    
     public void FixedUpdate() { }
 }

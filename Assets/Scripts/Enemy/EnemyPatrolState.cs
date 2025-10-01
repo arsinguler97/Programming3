@@ -3,7 +3,6 @@ using UnityEngine;
 public class EnemyPatrolState : IState
 {
     private EnemyStateManager _enemyStateManager;
-    private int _currentWaypointIndex;
 
     public EnemyPatrolState(EnemyStateManager enemyStateManager)
     {
@@ -12,32 +11,27 @@ public class EnemyPatrolState : IState
 
     public void Enter()
     {
-        Debug.Log("Entered Patrol State");
-        _currentWaypointIndex = 0;
-        if (_enemyStateManager.PatrolWaypoints.Length > 0)
-            _enemyStateManager.EnemyController.MoveTo(_enemyStateManager.PatrolWaypoints[_currentWaypointIndex]);
+        Debug.Log("Entered MoveToBase State");
+        _enemyStateManager.EnemyController.ResumeMoving();
+        _enemyStateManager.EnemyController.MoveTo(_enemyStateManager.TargetChecker.GetBasePosition());
     }
 
     public void Exit()
     {
-        Debug.Log("Exiting Patrol State");
+        Debug.Log("Exiting MoveToBase State");
     }
 
     public void Update()
     {
-        if (_enemyStateManager.PlayerChecker.IsPlayerInRange())
+        if (_enemyStateManager.TargetChecker.IsPlayerInRange())
         {
             _enemyStateManager.ChangeState(_enemyStateManager.EnemyChaseState);
             return;
         }
 
-        if (_enemyStateManager.PatrolWaypoints.Length == 0)
-            return;
-
         if (_enemyStateManager.EnemyController.ReachedDestination())
         {
-            _currentWaypointIndex = (_currentWaypointIndex + 1) % _enemyStateManager.PatrolWaypoints.Length;
-            _enemyStateManager.EnemyController.MoveTo(_enemyStateManager.PatrolWaypoints[_currentWaypointIndex]);
+            _enemyStateManager.ChangeState(_enemyStateManager.EnemyAttackState);
         }
     }
 

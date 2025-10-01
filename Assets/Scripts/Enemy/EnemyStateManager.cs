@@ -14,13 +14,11 @@ public class EnemyStateManager : MonoBehaviour
     public EnemyChaseState EnemyChaseState => _enemyChaseState;
 
     // References to components
-    [SerializeField] private PlayerChecker playerChecker;
-    public PlayerChecker PlayerChecker => playerChecker;
+    [SerializeField] private TargetChecker targetChecker;
+    public TargetChecker TargetChecker => targetChecker;
 
     [SerializeField] private EnemyController enemyController;
     public EnemyController EnemyController => enemyController;
-
-    [SerializeField] private Transform[] patrolWaypoints;
     
     [SerializeField] private float attackRange = 2f;
     public float AttackRange => attackRange;
@@ -33,10 +31,7 @@ public class EnemyStateManager : MonoBehaviour
     
     [SerializeField] private float idleDuration;
     public float IdleDuration => idleDuration;
-
-
-    public Transform[] PatrolWaypoints => patrolWaypoints;
-
+    
     private IState _currentState;
 
     private void Awake()
@@ -57,7 +52,7 @@ public class EnemyStateManager : MonoBehaviour
 
     void Start()
     {
-        ChangeState(_enemyIdleState);
+        ChangeState(_enemyPatrolState);
     }
 
     void Update()

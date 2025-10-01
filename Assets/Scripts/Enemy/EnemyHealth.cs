@@ -6,14 +6,14 @@ public class EnemyHealth : MonoBehaviour
     public event System.Action OnEnemyDeath;
     
     private int _enemyCurrentHealth;
-    [SerializeField] private int _enemyMaxHealth = 100;
+    [SerializeField] private int enemyMaxHealth = 100;
     
     public int EnemyCurrentHealth => _enemyCurrentHealth;
-    public int EnemyMaxHealth => _enemyMaxHealth;
+    public int EnemyMaxHealth => enemyMaxHealth;
     
     private void Start()
     {
-        _enemyCurrentHealth = _enemyMaxHealth;
+        _enemyCurrentHealth = enemyMaxHealth;
         OnHealthChanged?.Invoke(_enemyCurrentHealth);
     }
     
@@ -25,6 +25,7 @@ public class EnemyHealth : MonoBehaviour
         if (_enemyCurrentHealth <= 0)
         {
             OnEnemyDeath?.Invoke();
+            gameObject.SetActive(false);
         }
     }
 }

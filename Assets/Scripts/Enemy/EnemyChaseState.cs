@@ -23,15 +23,15 @@ public class EnemyChaseState : IState
 
     public void Update()
     {
-        if (_enemyStateManager.PlayerChecker.IsPlayerInAttackRange(_enemyStateManager.AttackRange))
+        if (_enemyStateManager.TargetChecker.IsPlayerInAttackRange(_enemyStateManager.AttackRange))
         {
             _enemyStateManager.ChangeState(_enemyStateManager.EnemyAttackState);
             return;
         }
 
-        if (_enemyStateManager.PlayerChecker.IsPlayerInRange())
+        if (_enemyStateManager.TargetChecker.IsPlayerInRange())
         {
-            _enemyStateManager.EnemyController.MoveTo(_enemyStateManager.PlayerChecker.GetPlayerPosition());
+            _enemyStateManager.EnemyController.MoveTo(_enemyStateManager.TargetChecker.GetPlayerPosition());
         }
         else
         {

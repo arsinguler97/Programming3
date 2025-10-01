@@ -14,6 +14,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float gravity = -9.81f;
     [SerializeField] private float jumpHeight = 2f;
     [SerializeField] private Transform cameraTransform;
+    
+    //For AimCamera
+    [SerializeField] private Transform cameraRoot;
+    [SerializeField] private float lookSensitivity = 2f;
+    private float _pitch;
+    private Vector2 _look;
+    private bool _isAiming;
 
     void Awake()
     {
@@ -25,6 +32,17 @@ public class PlayerMovement : MonoBehaviour
         _move = context.ReadValue<Vector2>();
     }
     
+    //For AimCamera
+    public void SetLook(InputAction.CallbackContext context)
+    {
+        _look = context.ReadValue<Vector2>();
+    }
+    
+    //For AimCamera
+    public void SetAiming(bool aiming)
+    {
+        _isAiming = aiming;
+    }
 
     public void SetJump(InputAction.CallbackContext context)
     {
@@ -38,14 +56,6 @@ public class PlayerMovement : MonoBehaviour
     {
         if (context.started) _isSprinting = true;
         if (context.canceled) _isSprinting = false;
-    }
-    
-    public void SetAttack(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            GetComponentInChildren<PlayerAttack>()?.TryAttack();
-        }
     }
 
     void OnEnable()
@@ -72,10 +82,13 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 move = camForward * _move.y + camRight * _move.x;
 
-        if (move.magnitude > 0.1f)
+        if (!_isAiming)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(move);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            if (move.magnitude > 0.1f)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(move);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            }
         }
 
         float currentSpeed = _isSprinting ? speed * sprintMultiplier : speed;
@@ -86,5 +99,16 @@ public class PlayerMovement : MonoBehaviour
 
         _velocity.y += gravity * Time.deltaTime;
         _controller.Move(_velocity * Time.deltaTime);
+        
+        //For AimCamera
+        if (_isAiming)
+        {
+            transform.Rotate(Vector3.up * (_look.x * lookSensitivity));
+
+            _pitch -= _look.y * lookSensitivity;
+            _pitch = Mathf.Clamp(_pitch, -45f, 70f);
+
+            cameraRoot.localRotation = Quaternion.Euler(_pitch, 0f, 0f);
+        }
     }
 }

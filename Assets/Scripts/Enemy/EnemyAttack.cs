@@ -62,11 +62,19 @@ public class EnemyAttack : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (_isAttacking && other.CompareTag("Player"))
+        if (!_isAttacking) return;
+
+        if (other.CompareTag("Player"))
         {
             PlayerHealth health = other.GetComponent<PlayerHealth>();
             if (health != null)
                 health.TakeDamage(damageAmount);
+        }
+        else if (other.CompareTag("Base"))
+        {
+            BaseHealth baseHealth = other.GetComponent<BaseHealth>();
+            if (baseHealth != null)
+                baseHealth.TakeDamage(damageAmount);
         }
     }
 }

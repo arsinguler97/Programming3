@@ -30,7 +30,7 @@ public class EnemyIdleState : IState
             _enemyStateManager.ChangeState(_enemyStateManager.EnemyPatrolState);
         }
 
-        if (_enemyStateManager.PlayerChecker.IsPlayerInRange())
+        if (_enemyStateManager.TargetChecker.IsPlayerInRange())
         {
             _enemyStateManager.ChangeState(_enemyStateManager.EnemyAttackState);
         }

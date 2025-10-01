@@ -13,7 +13,6 @@ public class PlayerHealthBar : MonoBehaviour
         healthSlider.maxValue = _playerHealth.MaxHealth;
         healthSlider.value = _playerHealth.CurrentHealth;
         _playerHealth.OnHealthChanged += UpdateHealthDisplay;
-        _playerHealth.OnPlayerDeath += HandlePlayerDeath;
     }
     
     private void OnDestroy()
@@ -21,18 +20,11 @@ public class PlayerHealthBar : MonoBehaviour
         if (_playerHealth != null)
         {
             _playerHealth.OnHealthChanged -= UpdateHealthDisplay;
-            _playerHealth.OnPlayerDeath -= HandlePlayerDeath;
         }
     }
     
     private void UpdateHealthDisplay(int newHealth)
     {
         healthSlider.value = newHealth;
-    }
-    
-    private void HandlePlayerDeath()
-    {
-        healthSlider.value = 0;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

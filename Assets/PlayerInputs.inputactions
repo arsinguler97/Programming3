@@ -25,6 +25,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "BowCharge",
+                    "type": "Button",
+                    "id": "03844975-e999-461d-89de-f303bca0761d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Sprint",
                     "type": "Button",
                     "id": "bd50bb5e-defc-415d-bbbc-c67c9530a40e",
@@ -46,6 +55,15 @@
                     "name": "Jump",
                     "type": "Button",
                     "id": "c4910be7-5f54-40d8-9db3-1e60d7379595",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "BowAim",
+                    "type": "Button",
+                    "id": "90e2c9ac-57e2-4fc2-b313-86c3df39d70b",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -165,6 +183,17 @@
                 },
                 {
                     "name": "",
+                    "id": "cc20c386-1994-4756-b598-f05de02efe28",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "BowCharge",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "6fded39b-93ef-4766-9fd3-9886106bfdbf",
                     "path": "<Keyboard>/leftShift",
                     "interactions": "",
@@ -177,7 +206,7 @@
                 {
                     "name": "",
                     "id": "58a2879a-71dd-4d85-919e-60c7dc0c464c",
-                    "path": "<Pointer>/delta",
+                    "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "DeltaTimeScale,ScaleVector2(x=0.1,y=0.1)",
                     "groups": ";Keyboard&Mouse",
@@ -193,6 +222,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aa195f02-01af-43ef-94bd-5b91c8066eab",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "BowAim",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
