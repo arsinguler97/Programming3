@@ -9,11 +9,12 @@ public class TargetChecker : MonoBehaviour
     private Transform playerTransform;
     private Transform baseTransform;
     
-    private void Awake()
+    public void SetTargets(Transform player, Transform baseT)
     {
-        playerTransform = GameManager.Instance.PlayerTransform;
-        baseTransform = GameManager.Instance.BaseTransform;
+        playerTransform = player;
+        baseTransform = baseT;
     }
+
 
     public bool IsPlayerInRange()
     {

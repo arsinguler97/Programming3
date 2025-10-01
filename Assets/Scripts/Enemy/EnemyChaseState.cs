@@ -38,6 +38,30 @@ public class EnemyChaseState : IState
             _enemyStateManager.ChangeState(_enemyStateManager.EnemyPatrolState);
         }
     }
+    
+    /*public void Update()
+    {
+        if (_enemyStateManager.TargetChecker.IsBaseInAttackRange(_enemyStateManager.AttackRange))
+        {
+            _enemyStateManager.ChangeState(_enemyStateManager.EnemyAttackState);
+            return;
+        }
+
+=        if (_enemyStateManager.TargetChecker.IsPlayerInAttackRange(_enemyStateManager.AttackRange))
+        {
+            _enemyStateManager.ChangeState(_enemyStateManager.EnemyAttackState);
+            return;
+        }
+
+=        if (_enemyStateManager.TargetChecker.IsPlayerInRange())
+        {
+            _enemyStateManager.EnemyController.MoveTo(_enemyStateManager.TargetChecker.GetPlayerPosition());
+        }
+        else
+        {
+=            _enemyStateManager.ChangeState(_enemyStateManager.EnemyPatrolState);
+        }
+    }*/
 
     public void FixedUpdate() { }
 }

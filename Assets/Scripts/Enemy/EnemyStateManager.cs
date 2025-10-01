@@ -42,7 +42,6 @@ public class EnemyStateManager : MonoBehaviour
         _enemyAttackState = new EnemyAttackState(this);
     }
 
-    // Change the state
     public void ChangeState(IState newState)
     {
         _currentState?.Exit();

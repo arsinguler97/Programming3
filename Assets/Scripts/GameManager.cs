@@ -5,6 +5,11 @@ public class GameManager : Singleton<GameManager>
 {
     public Transform PlayerTransform { get; private set; }
     public Transform BaseTransform { get; private set; }
+    
+    private void Start()
+    {
+        WaveManager.Instance.StartWaves();
+    }
 
     protected override void Initialize()
     {

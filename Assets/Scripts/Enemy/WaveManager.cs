@@ -32,7 +32,6 @@ public class WaveManager : Singleton<WaveManager>
             if (ui != null)
                 ui.UpdateWave(_currentWave, totalEnemiesToSpawn);
 
-            // Spawn et
             while (_spawnedEnemies < totalEnemiesToSpawn)
             {
                 SpawnEnemy();
@@ -49,7 +48,6 @@ public class WaveManager : Singleton<WaveManager>
 
             Debug.Log($"Wave {_currentWave} finished!");
 
-            // Wave bitti → ayarları artır
             totalEnemiesToSpawn += 10;
             spawnInterval = Mathf.Max(1f, spawnInterval - 1f);
             yield return new WaitForSeconds(3f);
@@ -69,10 +67,17 @@ public class WaveManager : Singleton<WaveManager>
         Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
         GameObject enemyObj = EnemyPoolManager.Instance.GetEnemy(spawnPoint.position);
 
+        TargetChecker checker = enemyObj.GetComponent<TargetChecker>();
+        if (checker != null)
+        {
+            checker.SetTargets(GameManager.Instance.PlayerTransform, GameManager.Instance.BaseTransform);
+        }
+
         EnemyHealth health = enemyObj.GetComponent<EnemyHealth>();
         if (health != null)
             health.OnEnemyDeath += HandleEnemyDeath;
     }
+
 
     private void HandleEnemyDeath()
     {

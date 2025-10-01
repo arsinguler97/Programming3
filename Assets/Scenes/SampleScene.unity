@@ -2939,7 +2939,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyPoolManager
   enemyPrefab: {fileID: 2792136615368162337, guid: f4af967ea5c13ff42a1f62a68cb5be2b, type: 3}
-  poolSize: 20
+  poolSize: 30
 --- !u!4 &937781476
 Transform:
   m_ObjectHideFlags: 0
@@ -2967,8 +2967,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 212026509b0f75249a57e7d149c16561, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  player: {fileID: 1583752293}
-  baseObject: {fileID: 895036391}
 --- !u!1 &938046273
 GameObject:
   m_ObjectHideFlags: 0
