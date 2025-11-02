@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class EnemyStateManager : MonoBehaviour
 {
-    private EnemyIdleState _enemyIdleState;
     private EnemyPatrolState _enemyPatrolState;
     private EnemyChaseState _enemyChaseState;
     private EnemyAttackState _enemyAttackState;
@@ -10,7 +9,6 @@ public class EnemyStateManager : MonoBehaviour
     // State Properties
     public EnemyPatrolState EnemyPatrolState => _enemyPatrolState;
     public EnemyAttackState EnemyAttackState => _enemyAttackState;
-    public EnemyIdleState EnemyIdleState => _enemyIdleState;
     public EnemyChaseState EnemyChaseState => _enemyChaseState;
 
     // References to components
@@ -29,16 +27,12 @@ public class EnemyStateManager : MonoBehaviour
     [SerializeField] private float chaseSpeed;
     public float ChaseSpeed => chaseSpeed;
     
-    [SerializeField] private float idleDuration;
-    public float IdleDuration => idleDuration;
-    
     private IState _currentState;
 
     private void Awake()
     {
         _enemyPatrolState = new EnemyPatrolState(this);
         _enemyChaseState = new EnemyChaseState(this);
-        _enemyIdleState = new EnemyIdleState(this);
         _enemyAttackState = new EnemyAttackState(this);
     }
 
