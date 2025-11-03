@@ -38,6 +38,5 @@ public class BaseHealthBar : MonoBehaviour
     private void HandleBaseDestroyed()
     {
         healthSlider.value = 0;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

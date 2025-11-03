@@ -5,6 +5,8 @@ public class EnemyController : MonoBehaviour
 {
     [SerializeField] private NavMeshAgent agent;
     
+    public float AgentSpeed => agent.speed;
+    
     public void SetSpeed(float speed)
     {
         agent.speed = speed;

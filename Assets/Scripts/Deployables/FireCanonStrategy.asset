@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5a69b9202733374a90c5ec13080521c, type: 3}
+  m_Name: FireCanonStrategy
+  m_EditorClassIdentifier: Assembly-CSharp::FireCannonDeployStrategy
+  strategyName: FireCanonStrategy
+  deployablePrefab: {fileID: 1855219686198154453, guid: 4ca0ce61bf0160a4091500c0fb1f9626, type: 3}

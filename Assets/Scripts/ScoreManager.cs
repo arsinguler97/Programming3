@@ -4,14 +4,34 @@ using TMPro;
 public class ScoreManager : MonoBehaviour
 {
     [SerializeField] private TMP_Text scoreText;
-    [SerializeField] private TMP_Text itemsText;
+    [SerializeField] private int passiveGoldPerMinute = 10;
+    private float _passiveTimer;
 
     private int _score;
-    private int _items;
 
     private void Start()
     {
         UpdateUI();
+    }
+
+    private void Update()
+    {
+        HandlePassiveGold();
+    }
+
+    private void HandlePassiveGold()
+    {
+        if (passiveGoldPerMinute <= 0) return;
+
+        float interval = 60f / passiveGoldPerMinute;
+        _passiveTimer += Time.deltaTime;
+
+        if (_passiveTimer >= interval)
+        {
+            _passiveTimer = 0f;
+            _score++;
+            UpdateUI();
+        }
     }
 
     public void HandlePointsAwarded(int amount)
@@ -20,18 +40,17 @@ public class ScoreManager : MonoBehaviour
         UpdateUI();
     }
 
-    public void HandleItemCollected()
+    public bool TrySpendGold(int amount)
     {
-        _items++;
+        if (_score < amount) return false;
+        _score -= amount;
         UpdateUI();
+        return true;
     }
 
     private void UpdateUI()
     {
         if (scoreText != null)
-            scoreText.text = "Score: " + _score;
-
-        if (itemsText != null)
-            itemsText.text = "Collected Items: " + _items;
+            scoreText.text = "Gold: " + _score;
     }
 }

@@ -44,6 +44,13 @@ public class EnemyHealthBar : MonoBehaviour
     private void HandleEnemyDeath()
     {
         healthSlider.value = 0;
-        Destroy(gameObject);
+    }
+    private void OnEnable()
+    {
+        if (_enemyHealth != null)
+        {
+            healthSlider.maxValue = _enemyHealth.EnemyMaxHealth;
+            healthSlider.value = _enemyHealth.EnemyCurrentHealth;
+        }
     }
 }

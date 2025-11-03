@@ -15,7 +15,6 @@ public class TargetChecker : MonoBehaviour
         baseTransform = baseT;
     }
 
-
     public bool IsPlayerInRange()
     {
         if (playerTransform == null) return false;
@@ -28,6 +27,24 @@ public class TargetChecker : MonoBehaviour
             if (Vector3.Angle(transform.forward, dirToPlayer) < viewAngle / 2f)
             {
                 if (!Physics.Raycast(transform.position, dirToPlayer, dist, obstacleMask))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public bool IsBaseInRange()
+    {
+        if (baseTransform == null) return false;
+
+        Vector3 dirToBase = (baseTransform.position - transform.position).normalized;
+        float dist = Vector3.Distance(transform.position, baseTransform.position);
+
+        if (dist <= viewRadius)
+        {
+            if (Vector3.Angle(transform.forward, dirToBase) < viewAngle / 2f)
+            {
+                if (!Physics.Raycast(transform.position, dirToBase, dist, obstacleMask))
                     return true;
             }
         }

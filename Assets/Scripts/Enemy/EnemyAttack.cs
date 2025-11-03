@@ -6,6 +6,8 @@ public class EnemyAttack : MonoBehaviour
     [SerializeField] private float swingSpeed = 200f;
     [SerializeField] private float upAngle = 30f;
     [SerializeField] private float downAngle = -60f;
+    [SerializeField] private float attackRadius = 2f; 
+    [SerializeField] private LayerMask targetMask;
 
     private Transform _pivot;
     private bool _isAttacking;
@@ -20,11 +22,14 @@ public class EnemyAttack : MonoBehaviour
 
     public void StartAttack()
     {
-        if (!_isAttacking)
-        {
-            _isAttacking = true;
-            _phase = 0;
-        }
+        if (_isAttacking) return;
+
+        _isAttacking = true;
+        _phase = 0;
+
+        // 🔥 Hasarı burada uygula
+        ApplyDamage();
+
     }
 
     void Update()
@@ -60,21 +65,30 @@ public class EnemyAttack : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void ApplyDamage()
     {
-        if (!_isAttacking) return;
+        Collider[] hits = Physics.OverlapSphere(transform.position, attackRadius, targetMask);
 
-        if (other.CompareTag("Player"))
+        foreach (var hit in hits)
         {
-            PlayerHealth health = other.GetComponent<PlayerHealth>();
-            if (health != null)
-                health.TakeDamage(damageAmount);
+            if (hit.CompareTag("Player"))
+            {
+                PlayerHealth health = hit.GetComponent<PlayerHealth>();
+                if (health != null)
+                    health.TakeDamage(damageAmount);
+            }
+            else if (hit.CompareTag("Base"))
+            {
+                BaseHealth baseHealth = hit.GetComponent<BaseHealth>();
+                if (baseHealth != null)
+                    baseHealth.TakeDamage(damageAmount);
+            }
         }
-        else if (other.CompareTag("Base"))
-        {
-            BaseHealth baseHealth = other.GetComponent<BaseHealth>();
-            if (baseHealth != null)
-                baseHealth.TakeDamage(damageAmount);
-        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRadius);
     }
 }

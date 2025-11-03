@@ -22,24 +22,38 @@ public class EnemyAttackState : IState
 
     public void Update()
     {
-        bool baseInRange = _enemyStateManager.TargetChecker.IsBaseInAttackRange(_enemyStateManager.AttackRange);
-        bool playerInRange = _enemyStateManager.TargetChecker.IsPlayerInAttackRange(_enemyStateManager.AttackRange);
+        bool baseInSight = _enemyStateManager.TargetChecker.IsBaseInRange();
+        bool baseInAttackRange = _enemyStateManager.TargetChecker.IsBaseInAttackRange(_enemyStateManager.AttackRange);
+        bool playerInSight = _enemyStateManager.TargetChecker.IsPlayerInRange();
+        bool playerInAttackRange = _enemyStateManager.TargetChecker.IsPlayerInAttackRange(_enemyStateManager.AttackRange);
 
-        if (baseInRange)
+        if (baseInSight)
         {
-            HandleAttack();
+            if (baseInAttackRange)
+            {
+                HandleAttack();
+                return;
+            }
+
+            _enemyStateManager.ChangeState(_enemyStateManager.EnemyChaseState);
             return;
         }
 
-        if (playerInRange)
+        if (playerInSight)
         {
-            HandleAttack();
+            if (playerInAttackRange)
+            {
+                HandleAttack();
+                return;
+            }
+
+            _enemyStateManager.ChangeState(_enemyStateManager.EnemyChaseState);
             return;
         }
 
-        _enemyStateManager.ChangeState(_enemyStateManager.EnemyChaseState);
+        _enemyStateManager.ChangeState(_enemyStateManager.EnemyPatrolState);
     }
-    
+
     private void HandleAttack()
     {
         _attackTimer -= Time.deltaTime;
@@ -49,6 +63,6 @@ public class EnemyAttackState : IState
             _attackTimer = _enemyStateManager.AttackCooldown;
         }
     }
-    
+
     public void FixedUpdate() { }
 }

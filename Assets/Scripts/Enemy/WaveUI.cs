@@ -14,7 +14,7 @@ public class WaveUI : MonoBehaviour
             waveText.text = "Wave: 0";
 
         if (waveProgressSlider != null)
-            waveProgressSlider.value = 1f; // full
+            waveProgressSlider.value = 1f;
     }
 
     public void UpdateWave(int waveNumber, int totalEnemies)

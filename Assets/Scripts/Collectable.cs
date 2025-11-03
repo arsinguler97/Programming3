@@ -3,20 +3,24 @@ using UnityEngine.Events;
 
 public class Collectable : MonoBehaviour
 {
-    // UnityEvents visible in Inspector
     public UnityEvent onItemCollected;
     public UnityEvent<int> onPointsAwarded;
-    
-    private int _pointValue;
-    
+
+    [SerializeField] private int pointValue = 20;
+
+    private void Start()
+    {
+        ScoreManager sm = FindFirstObjectByType<ScoreManager>();
+        if (sm != null)
+            onPointsAwarded.AddListener(sm.HandlePointsAwarded);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            // Invoke events
             onItemCollected?.Invoke();
-            onPointsAwarded?.Invoke(_pointValue);
-            
+            onPointsAwarded?.Invoke(pointValue);
             Destroy(gameObject);
         }
     }
