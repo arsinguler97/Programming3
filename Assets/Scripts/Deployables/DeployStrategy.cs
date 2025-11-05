@@ -6,5 +6,5 @@ public abstract class DeployStrategy : ScriptableObject
     public string strategyName;
     public GameObject deployablePrefab;
 
-    public abstract void Deploy(Vector3 position);
+    public abstract void Deploy(Vector3 position, Quaternion rotation);
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class IceCannon : DeployableBase
 {
@@ -8,12 +9,18 @@ public class IceCannon : DeployableBase
     [SerializeField] private float width = 3f;
     [SerializeField] private float slowAmount = 0.5f;
     [SerializeField] private float slowDuration = 1.5f;
-    [SerializeField] private ParticleSystem iceVFX;
+    [SerializeField] private ParticleSystem iceVFXPrefab;
+
+    private ParticleSystem _activeVFX;
+    private readonly Dictionary<EnemyController, Coroutine> _activeSlows = new();
 
     private void Start()
     {
-        if (iceVFX != null && !iceVFX.isPlaying)
-            iceVFX.Play();
+        if (iceVFXPrefab != null && firePoint != null)
+        {
+            _activeVFX = Instantiate(iceVFXPrefab, firePoint.position, firePoint.rotation, firePoint);
+            _activeVFX.Play();
+        }
     }
 
     void Update()
@@ -22,27 +29,40 @@ public class IceCannon : DeployableBase
 
         Collider[] hits = Physics.OverlapBox(
             firePoint.position + firePoint.forward * (range / 2f),
-            new Vector3(width / 2f, 1f, range / 2f),
-            firePoint.rotation
+            new Vector3(width / 2f, 1.5f, range / 2f),
+            firePoint.rotation,
+            ~0,
+            QueryTriggerInteraction.Collide
         );
 
         foreach (var hit in hits)
         {
-            if (hit.CompareTag("Enemy"))
+            if (!hit.CompareTag("Enemy")) continue;
+
+            var enemy = hit.GetComponent<EnemyController>();
+            if (enemy == null) continue;
+
+            if (!_activeSlows.ContainsKey(enemy))
             {
-                var enemy = hit.GetComponent<EnemyController>();
-                if (enemy != null)
-                    StartCoroutine(ApplySlow(enemy));
+                Coroutine c = StartCoroutine(ApplySlow(enemy));
+                _activeSlows.Add(enemy, c);
             }
         }
     }
 
     private IEnumerator ApplySlow(EnemyController enemy)
     {
+        if (enemy == null) yield break;
+
         float originalSpeed = enemy.AgentSpeed;
         enemy.SetSpeed(originalSpeed * slowAmount);
+
         yield return new WaitForSeconds(slowDuration);
-        enemy.SetSpeed(originalSpeed);
+
+        if (enemy != null)
+            enemy.SetSpeed(originalSpeed);
+
+        _activeSlows.Remove(enemy);
     }
 
     private void OnDrawGizmosSelected()

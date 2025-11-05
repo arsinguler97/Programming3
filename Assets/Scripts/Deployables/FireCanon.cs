@@ -6,31 +6,51 @@ public class FireCannon : DeployableBase
     [SerializeField] private float damagePerSecond = 10f;
     [SerializeField] private float range = 6f;
     [SerializeField] private float width = 3f;
-    [SerializeField] private ParticleSystem fireVFX;
+    [SerializeField] private ParticleSystem fireVFXPrefab;
+
+    private ParticleSystem _activeVFX;
+    private float _damageBuffer;
 
     private void Start()
     {
-        if (fireVFX != null && !fireVFX.isPlaying)
-            fireVFX.Play();
+        if (fireVFXPrefab != null && firePoint != null)
+        {
+            _activeVFX = Instantiate(fireVFXPrefab, firePoint.position, firePoint.rotation, firePoint);
+            _activeVFX.Play();
+        }
     }
 
     void Update()
     {
         if (firePoint == null) return;
 
+        _damageBuffer += damagePerSecond * Time.deltaTime;
+
+        if (_damageBuffer >= 1f)
+        {
+            int finalDamage = Mathf.FloorToInt(_damageBuffer);
+            _damageBuffer -= finalDamage;
+            DealDamage(finalDamage);
+        }
+    }
+
+    private void DealDamage(int amount)
+    {
         Collider[] hits = Physics.OverlapBox(
             firePoint.position + firePoint.forward * (range / 2f),
-            new Vector3(width / 2f, 1f, range / 2f),
-            firePoint.rotation
+            new Vector3(width / 2f, 1.5f, range / 2f),
+            firePoint.rotation,
+            ~0,
+            QueryTriggerInteraction.Collide
         );
 
         foreach (var hit in hits)
         {
             if (hit.CompareTag("Enemy"))
             {
-                var e = hit.GetComponent<EnemyHealth>();
+                EnemyHealth e = hit.GetComponent<EnemyHealth>();
                 if (e != null)
-                    e.EnemyTakeDamage(Mathf.RoundToInt(damagePerSecond * Time.deltaTime));
+                    e.EnemyTakeDamage(amount);
             }
         }
     }

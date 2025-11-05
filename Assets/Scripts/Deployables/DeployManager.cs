@@ -65,7 +65,7 @@ public class DeployManager : MonoBehaviour
         }
 
         Vector3 deployPos = GetPlacementPosition();
-        strategy.Deploy(deployPos);
+        strategy.Deploy(deployPos, placementOrigin.rotation);
     }
 
     private Vector3 GetPlacementPosition()

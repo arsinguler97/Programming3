@@ -3,8 +3,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "SpikeTrapStrategy", menuName = "Deployables/Spike Trap")]
 public class SpikeTrapDeployStrategy : DeployStrategy
 {
-    public override void Deploy(Vector3 position)
+    public override void Deploy(Vector3 position, Quaternion rotation)
     {
-        Instantiate(deployablePrefab, position, Quaternion.identity);
+        Instantiate(deployablePrefab, position, rotation);
     }
 }

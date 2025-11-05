@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 5309844582340439680}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071065, y: -0, z: -0, w: 0.7071071}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -138,7 +138,7 @@ Transform:
   m_GameObject: {fileID: 7109411985183468828}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalPosition: {x: 0, y: 1.75, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -173,7 +173,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -0.75, z: -0.8999996}
-  m_LocalScale: {x: 1.5, y: 1, z: 2}
+  m_LocalScale: {x: 1.5, y: 4, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6415254814617240939}
@@ -303,14 +303,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c43a06763ec7af43b0bcabd3fe8893e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IceCannon
-  heightOffset: 500
   cost: 15
   firePoint: {fileID: 2406136519100576980}
   range: 8
-  width: 3
+  width: 1
   slowAmount: 0.5
   slowDuration: 2
-  iceVFX: {fileID: 198433943929519872, guid: 1a1c02facd51d87458dcaa3a761e2c03, type: 3}
+  iceVFXPrefab: {fileID: 198421077076039884, guid: fd0be49f4e5318745ac81aed62286ff1, type: 3}
 --- !u!64 &2835151334827682929
 MeshCollider:
   m_ObjectHideFlags: 0
