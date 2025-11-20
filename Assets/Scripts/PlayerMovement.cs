@@ -14,31 +14,32 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float gravity = -9.81f;
     [SerializeField] private float jumpHeight = 2f;
     [SerializeField] private Transform cameraTransform;
-    
-    //For AimCamera
+
     [SerializeField] private Transform cameraRoot;
     [SerializeField] private float lookSensitivity = 2f;
+
     private float _pitch;
     private Vector2 _look;
     private bool _isAiming;
 
+    private DeployManager _deployManager;
+
     void Awake()
     {
         _controller = GetComponent<CharacterController>();
+        _deployManager = FindFirstObjectByType<DeployManager>();
     }
 
     public void SetMove(InputAction.CallbackContext context)
     {
         _move = context.ReadValue<Vector2>();
     }
-    
-    //For AimCamera
+
     public void SetLook(InputAction.CallbackContext context)
     {
         _look = context.ReadValue<Vector2>();
     }
-    
-    //For AimCamera
+
     public void SetAiming(bool aiming)
     {
         _isAiming = aiming;
@@ -47,15 +48,31 @@ public class PlayerMovement : MonoBehaviour
     public void SetJump(InputAction.CallbackContext context)
     {
         if (context.performed && _controller.isGrounded)
-        {
             _velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-        }
     }
 
     public void SetSprint(InputAction.CallbackContext context)
     {
         if (context.started) _isSprinting = true;
         if (context.canceled) _isSprinting = false;
+    }
+
+    public void DeployFireCannon(InputAction.CallbackContext ctx)
+    {
+        Debug.Log("Fire Cannon pressed");
+        if (ctx.performed) _deployManager?.DeployFireCannon();
+    }
+
+    public void DeployIceCannon(InputAction.CallbackContext ctx)
+    {
+        Debug.Log("Ice Cannon pressed");
+        if (ctx.performed) _deployManager?.DeployIceCannon();
+    }
+
+    public void DeploySpikeTrap(InputAction.CallbackContext ctx)
+    {
+        Debug.Log("Spike Trap pressed");
+        if (ctx.performed) _deployManager?.DeploySpikeTrap();
     }
 
     void OnEnable()
@@ -82,13 +99,10 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 move = camForward * _move.y + camRight * _move.x;
 
-        if (!_isAiming)
+        if (!_isAiming && move.magnitude > 0.1f)
         {
-            if (move.magnitude > 0.1f)
-            {
-                Quaternion targetRotation = Quaternion.LookRotation(move);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-            }
+            Quaternion rot = Quaternion.LookRotation(move);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rot, rotationSpeed * Time.deltaTime);
         }
 
         float currentSpeed = _isSprinting ? speed * sprintMultiplier : speed;
@@ -99,8 +113,7 @@ public class PlayerMovement : MonoBehaviour
 
         _velocity.y += gravity * Time.deltaTime;
         _controller.Move(_velocity * Time.deltaTime);
-        
-        //For AimCamera
+
         if (_isAiming)
         {
             transform.Rotate(Vector3.up * (_look.x * lookSensitivity));

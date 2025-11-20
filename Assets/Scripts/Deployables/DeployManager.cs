@@ -3,7 +3,9 @@ using UnityEngine;
 public class DeployManager : MonoBehaviour
 {
     [Header("Deploy Strategies")]
-    [SerializeField] private DeployStrategy[] deployStrategies;
+    [SerializeField] private DeployStrategy fireCannonStrategy;
+    [SerializeField] private DeployStrategy iceCannonStrategy;
+    [SerializeField] private DeployStrategy spikeTrapStrategy;
 
     [Header("Placement Settings")]
     [SerializeField] private Transform placementOrigin;
@@ -12,7 +14,7 @@ public class DeployManager : MonoBehaviour
 
     private ScoreManager _scoreManager;
 
-    private void Start()
+    void Start()
     {
         _scoreManager = FindFirstObjectByType<ScoreManager>();
 
@@ -23,56 +25,38 @@ public class DeployManager : MonoBehaviour
         }
     }
 
-    private void Update()
+    public void DeployFireCannon()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) TryDeploy(0);
-        if (Input.GetKeyDown(KeyCode.Alpha2)) TryDeploy(1);
-        if (Input.GetKeyDown(KeyCode.Alpha3)) TryDeploy(2);
+        TryDeploy(fireCannonStrategy);
     }
 
-    private void TryDeploy(int index)
+    public void DeployIceCannon()
     {
-        if (deployStrategies == null || index < 0 || index >= deployStrategies.Length)
-        {
-            Debug.LogWarning("DeployManager: Invalid index!");
-            return;
-        }
+        TryDeploy(iceCannonStrategy);
+    }
 
-        var strategy = deployStrategies[index];
-        if (strategy == null || strategy.deployablePrefab == null)
-        {
-            Debug.LogWarning("DeployManager: Strategy or prefab missing!");
-            return;
-        }
+    public void DeploySpikeTrap()
+    {
+        TryDeploy(spikeTrapStrategy);
+    }
+
+    private void TryDeploy(DeployStrategy strategy)
+    {
+        if (strategy == null || strategy.deployablePrefab == null) return;
 
         var deployable = strategy.deployablePrefab.GetComponent<DeployableBase>();
-        if (deployable == null)
-        {
-            Debug.LogWarning("DeployManager: Prefab missing DeployableBase!");
-            return;
-        }
+        if (deployable == null) return;
 
-        if (_scoreManager == null)
-        {
-            Debug.LogError("DeployManager: ScoreManager not found!");
-            return;
-        }
+        if (_scoreManager == null) return;
 
-        if (!_scoreManager.TrySpendGold(deployable.Cost))
-        {
-            Debug.Log("Not enough gold to deploy " + strategy.name);
-            return;
-        }
+        if (!_scoreManager.TrySpendGold(deployable.Cost)) return;
 
-        Vector3 deployPos = GetPlacementPosition();
-        strategy.Deploy(deployPos, placementOrigin.rotation);
+        Vector3 pos = GetPlacementPosition();
+        strategy.Deploy(pos, placementOrigin.rotation);
     }
 
     private Vector3 GetPlacementPosition()
     {
-        if (placementOrigin == null)
-            return Vector3.zero;
-
         Vector3 origin = placementOrigin.position + placementOrigin.forward * placementDistance;
 
         if (Physics.Raycast(origin + Vector3.up * 5f, Vector3.down, out RaycastHit hit, 10f, groundMask))
