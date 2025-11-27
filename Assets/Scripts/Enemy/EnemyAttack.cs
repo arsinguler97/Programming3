@@ -27,9 +27,7 @@ public class EnemyAttack : MonoBehaviour
         _isAttacking = true;
         _phase = 0;
 
-        // 🔥 Hasarı burada uygula
         ApplyDamage();
-
     }
 
     void Update()

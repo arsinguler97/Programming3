@@ -52,7 +52,30 @@ public class DeployManager : MonoBehaviour
         if (!_scoreManager.TrySpendGold(deployable.Cost)) return;
 
         Vector3 pos = GetPlacementPosition();
-        strategy.Deploy(pos, placementOrigin.rotation);
+        Quaternion rot = GetSnappedRotation();
+
+        strategy.Deploy(pos, rot);
+    }
+
+    private Quaternion GetSnappedRotation()
+    {
+        float y = placementOrigin.eulerAngles.y;
+
+        float[] angles = { 0f, 90f, 180f, 270f };
+        float closest = 0f;
+        float best = 999f;
+
+        foreach (float a in angles)
+        {
+            float diff = Mathf.Abs(Mathf.DeltaAngle(y, a));
+            if (diff < best)
+            {
+                best = diff;
+                closest = a;
+            }
+        }
+
+        return Quaternion.Euler(0f, closest, 0f);
     }
 
     private Vector3 GetPlacementPosition()

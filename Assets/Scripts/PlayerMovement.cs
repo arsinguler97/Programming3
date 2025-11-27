@@ -59,19 +59,16 @@ public class PlayerMovement : MonoBehaviour
 
     public void DeployFireCannon(InputAction.CallbackContext ctx)
     {
-        Debug.Log("Fire Cannon pressed");
         if (ctx.performed) _deployManager?.DeployFireCannon();
     }
 
     public void DeployIceCannon(InputAction.CallbackContext ctx)
     {
-        Debug.Log("Ice Cannon pressed");
         if (ctx.performed) _deployManager?.DeployIceCannon();
     }
 
     public void DeploySpikeTrap(InputAction.CallbackContext ctx)
     {
-        Debug.Log("Spike Trap pressed");
         if (ctx.performed) _deployManager?.DeploySpikeTrap();
     }
 
