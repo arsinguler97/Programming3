@@ -13,6 +13,8 @@ public class EnemyAttack : MonoBehaviour
     private bool _isAttacking;
     private int _phase;
     private float _startAngle;
+    
+    private readonly Collider[] _results = new Collider[10];
 
     void Start()
     {
@@ -65,24 +67,50 @@ public class EnemyAttack : MonoBehaviour
 
     private void ApplyDamage()
     {
-        Collider[] hits = Physics.OverlapSphere(transform.position, attackRadius, targetMask);
+        int count = Physics.OverlapSphereNonAlloc(transform.position, attackRadius, _results, targetMask);
 
-        foreach (var hit in hits)
+        Transform barrierTransform = null;
+        PlayerHealth playerHealth = null;
+        BaseHealth baseHealth = null;
+
+        for (int i = 0; i < count; i++)
         {
-            if (hit.CompareTag("Player"))
+            var hit = _results[i];
+
+            if (hit.CompareTag("Barrier"))
             {
-                PlayerHealth health = hit.GetComponent<PlayerHealth>();
-                if (health != null)
-                    health.TakeDamage(damageAmount);
+                barrierTransform = hit.transform;
+            }
+            else if (hit.CompareTag("Player"))
+            {
+                playerHealth = hit.GetComponent<PlayerHealth>();
             }
             else if (hit.CompareTag("Base"))
             {
-                BaseHealth baseHealth = hit.GetComponent<BaseHealth>();
-                if (baseHealth != null)
-                    baseHealth.TakeDamage(damageAmount);
+                baseHealth = hit.GetComponent<BaseHealth>();
             }
         }
+
+        if (barrierTransform != null)
+        {
+            barrierTransform.GetComponent<Barrier>().TakeDamage(damageAmount);
+            return;
+        }
+
+        if (playerHealth != null)
+        {
+            playerHealth.TakeDamage(damageAmount);
+            return;
+        }
+
+        if (baseHealth != null)
+        {
+            baseHealth.TakeDamage(damageAmount);
+            return;
+        }
     }
+
+
 
     private void OnDrawGizmosSelected()
     {

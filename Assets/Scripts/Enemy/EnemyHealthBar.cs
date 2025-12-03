@@ -23,7 +23,7 @@ public class EnemyHealthBar : MonoBehaviour
     {
         if (_camera != null)
         {
-            transform.LookAt(transform.position + _camera.transform.forward);
+            transform.LookAt(_camera.transform.position);
         }
     }
 

@@ -1,14 +1,18 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class TargetChecker : MonoBehaviour
 {
     [SerializeField] private LayerMask obstacleMask;
+    [SerializeField] private LayerMask barrierMask;
     [SerializeField] private float viewRadius = 10f;
     [SerializeField] private float viewAngle = 60f;
-    
+
     private Transform playerTransform;
     private Transform baseTransform;
-    
+
+    private readonly Collider[] _barrierResults = new Collider[20];
+
     public void SetTargets(Transform player, Transform baseT)
     {
         playerTransform = player;
@@ -30,6 +34,7 @@ public class TargetChecker : MonoBehaviour
                     return true;
             }
         }
+
         return false;
     }
 
@@ -48,6 +53,7 @@ public class TargetChecker : MonoBehaviour
                     return true;
             }
         }
+
         return false;
     }
 
@@ -73,22 +79,64 @@ public class TargetChecker : MonoBehaviour
         return baseTransform != null ? baseTransform.position : transform.position;
     }
 
-    private void OnDrawGizmos()
+    public bool IsPathToBaseBlocked()
     {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, viewRadius);
+        if (baseTransform == null) return false;
 
-        Vector3 leftBoundary = Quaternion.Euler(0, -viewAngle / 2f, 0) * transform.forward;
-        Vector3 rightBoundary = Quaternion.Euler(0, viewAngle / 2f, 0) * transform.forward;
+        NavMeshPath path = new NavMeshPath();
+        bool found = NavMesh.CalculatePath(transform.position, baseTransform.position, NavMesh.AllAreas, path);
 
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(transform.position, transform.position + leftBoundary * viewRadius);
-        Gizmos.DrawLine(transform.position, transform.position + rightBoundary * viewRadius);
+        if (!found) return true;
+        return path.status != NavMeshPathStatus.PathComplete;
+    }
 
-        if (baseTransform != null)
+    public bool TryGetBlockingBarrier(out Transform barrier)
+    {
+        barrier = null;
+
+        if (baseTransform == null) return false;
+
+        NavMeshPath path = new NavMeshPath();
+        if (!NavMesh.CalculatePath(transform.position, baseTransform.position, NavMesh.AllAreas, path))
+            return false;
+
+        for (int i = 0; i < path.corners.Length - 1; i++)
         {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, baseTransform.position);
+            Vector3 start = path.corners[i];
+            Vector3 end = path.corners[i + 1];
+
+            Vector3 dir = (end - start).normalized;
+            float dist = Vector3.Distance(start, end);
+
+            if (Physics.Raycast(start, dir, out RaycastHit hit, dist, barrierMask))
+            {
+                barrier = hit.transform;
+                return true;
+            }
         }
+
+        return false;
+    }
+
+    public bool TryGetNearestBarrier(out Transform barrierTransform)
+    {
+        barrierTransform = null;
+
+        int count = Physics.OverlapSphereNonAlloc(transform.position, viewRadius, _barrierResults, barrierMask);
+
+        float best = Mathf.Infinity;
+
+        for (int i = 0; i < count; i++)
+        {
+            float dist = Vector3.Distance(transform.position, _barrierResults[i].transform.position);
+
+            if (dist < best)
+            {
+                best = dist;
+                barrierTransform = _barrierResults[i].transform;
+            }
+        }
+
+        return barrierTransform != null;
     }
 }

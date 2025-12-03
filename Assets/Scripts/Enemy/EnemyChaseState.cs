@@ -19,6 +19,24 @@ public class EnemyChaseState : IState
 
     public void Update()
     {
+        if (_enemyStateManager.TargetChecker.IsPathToBaseBlocked())
+        {
+            if (_enemyStateManager.TargetChecker.TryGetBlockingBarrier(out Transform blockingBarrier))
+            {
+                _enemyStateManager.EnemyController.MoveTo(blockingBarrier.position);
+                return;
+            }
+
+            if (_enemyStateManager.TargetChecker.TryGetNearestBarrier(out Transform anyBarrier))
+            {
+                _enemyStateManager.EnemyController.MoveTo(anyBarrier.position);
+                return;
+            }
+
+            _enemyStateManager.ChangeState(_enemyStateManager.EnemyPatrolState);
+            return;
+        }
+
         if (_enemyStateManager.TargetChecker.IsBaseInRange())
         {
             if (_enemyStateManager.TargetChecker.IsBaseInAttackRange(_enemyStateManager.AttackRange))

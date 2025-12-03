@@ -6,6 +6,7 @@ public class DeployManager : MonoBehaviour
     [SerializeField] private DeployStrategy fireCannonStrategy;
     [SerializeField] private DeployStrategy iceCannonStrategy;
     [SerializeField] private DeployStrategy spikeTrapStrategy;
+    [SerializeField] private DeployStrategy barrierStrategy;
 
     [Header("Placement Settings")]
     [SerializeField] private Transform placementOrigin;
@@ -38,6 +39,11 @@ public class DeployManager : MonoBehaviour
     public void DeploySpikeTrap()
     {
         TryDeploy(spikeTrapStrategy);
+    }
+    
+    public void DeployBarrier()
+    {
+        TryDeploy(barrierStrategy);
     }
 
     private void TryDeploy(DeployStrategy strategy)

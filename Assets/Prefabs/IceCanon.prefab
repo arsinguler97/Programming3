@@ -309,9 +309,8 @@ MonoBehaviour:
   range: 8
   width: 1
   slowAmount: 0.5
-  slowDuration: 2
+  slowDuration: 4
   iceVFXPrefab: {fileID: 198421077076039884, guid: fd0be49f4e5318745ac81aed62286ff1, type: 3}
-  scanRate: 0.1
 --- !u!64 &2835151334827682929
 MeshCollider:
   m_ObjectHideFlags: 0

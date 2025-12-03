@@ -9,6 +9,7 @@ TagManager:
   - Arrow
   - Base
   - Deployable
+  - Barrier
   layers:
   - Default
   - TransparentFX
@@ -18,9 +19,9 @@ TagManager:
   - UI
   - Arrow
   - Canon
-  - 
-  - 
-  - 
+  - Barrier
+  - Player
+  - Base
   - 
   - 
   - 

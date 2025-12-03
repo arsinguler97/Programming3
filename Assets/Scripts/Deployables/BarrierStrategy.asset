@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ca1b2be26faed5489b8dc986bf9d479, type: 3}
+  m_Name: BarrierStrategy
+  m_EditorClassIdentifier: Assembly-CSharp::BarrierDeployStrategy
+  strategyName: BarrierStrategy
+  deployablePrefab: {fileID: 1686678700443787661, guid: 5ff97ba10fe45724d9bd84e2d3d7259f, type: 3}

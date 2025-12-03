@@ -72,6 +72,11 @@ public class PlayerMovement : MonoBehaviour
         if (ctx.performed) _deployManager?.DeploySpikeTrap();
     }
 
+    public void DeployBarrier(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed) _deployManager?.DeployBarrier();
+    }
+
     void OnEnable()
     {
         Cursor.lockState = CursorLockMode.Locked;

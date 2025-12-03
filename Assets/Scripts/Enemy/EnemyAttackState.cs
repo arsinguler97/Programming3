@@ -22,14 +22,34 @@ public class EnemyAttackState : IState
 
     public void Update()
     {
-        bool baseInSight = _enemyStateManager.TargetChecker.IsBaseInRange();
-        bool baseInAttackRange = _enemyStateManager.TargetChecker.IsBaseInAttackRange(_enemyStateManager.AttackRange);
-        bool playerInSight = _enemyStateManager.TargetChecker.IsPlayerInRange();
-        bool playerInAttackRange = _enemyStateManager.TargetChecker.IsPlayerInAttackRange(_enemyStateManager.AttackRange);
-
-        if (baseInSight)
+        if (_enemyStateManager.TargetChecker.IsPathToBaseBlocked())
         {
-            if (baseInAttackRange)
+            if (_enemyStateManager.TargetChecker.TryGetBlockingBarrier(out Transform blockingBarrier))
+            {
+                float dist = Vector3.Distance(blockingBarrier.position, _enemyStateManager.transform.position);
+
+                if (dist <= _enemyStateManager.AttackRange)
+                {
+                    HandleAttack();
+                    return;
+                }
+
+                _enemyStateManager.ChangeState(_enemyStateManager.EnemyChaseState);
+                return;
+            }
+
+            _enemyStateManager.ChangeState(_enemyStateManager.EnemyPatrolState);
+            return;
+        }
+
+        bool baseInRange = _enemyStateManager.TargetChecker.IsBaseInRange();
+        bool baseInAttack = _enemyStateManager.TargetChecker.IsBaseInAttackRange(_enemyStateManager.AttackRange);
+        bool playerInRange = _enemyStateManager.TargetChecker.IsPlayerInRange();
+        bool playerInAttack = _enemyStateManager.TargetChecker.IsPlayerInAttackRange(_enemyStateManager.AttackRange);
+
+        if (baseInRange)
+        {
+            if (baseInAttack)
             {
                 HandleAttack();
                 return;
@@ -39,9 +59,9 @@ public class EnemyAttackState : IState
             return;
         }
 
-        if (playerInSight)
+        if (playerInRange)
         {
-            if (playerInAttackRange)
+            if (playerInAttack)
             {
                 HandleAttack();
                 return;

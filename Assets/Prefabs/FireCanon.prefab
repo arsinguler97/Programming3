@@ -51,11 +51,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FireCannon
   cost: 10
   firePoint: {fileID: 2587748324838835825}
-  damagePerSecond: 5
-  range: 6
-  width: 2
+  damagePerSecond: 10
+  range: 8
+  width: 1
   fireVFXPrefab: {fileID: 198421077076039884, guid: cf157357b20d5ef4ba9586b367f038c6, type: 3}
-  scanRate: 0.1
 --- !u!64 &5300325896191630420
 MeshCollider:
   m_ObjectHideFlags: 0
