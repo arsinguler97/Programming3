@@ -9,8 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 550309200639513400}
-  - component: {fileID: 6916168262023329336}
-  - component: {fileID: 2527066653293923610}
+  - component: {fileID: 1564377729158429020}
   m_Layer: 8
   m_Name: BarrierPrefab
   m_TagString: Barrier
@@ -27,14 +26,14 @@ Transform:
   m_GameObject: {fileID: 1686678700443787661}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.287374, y: 0, z: 17.788633}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2208989137853092111}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6916168262023329336
+--- !u!114 &1564377729158429020
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -47,20 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Barrier
   cost: 25
-  maxHealth: 100
---- !u!114 &2527066653293923610
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1686678700443787661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: acd2f79b55fac254fb0d4f901cdf3b6f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BarrierHealth
-  maxHealth: 100
+  maxHealth: 50
 --- !u!1001 &4752038933003772771
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -168,6 +154,14 @@ PrefabInstance:
     - target: {fileID: 1683437984071364343, guid: f6f68926f2a1b994ca09bfe4cebf39f8, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1892835583983852493, guid: f6f68926f2a1b994ca09bfe4cebf39f8, type: 3}
+      propertyPath: m_Size.x
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 1892835583983852493, guid: f6f68926f2a1b994ca09bfe4cebf39f8, type: 3}
+      propertyPath: m_Size.z
+      value: 55
       objectReference: {fileID: 0}
     - target: {fileID: 2030317885239264254, guid: f6f68926f2a1b994ca09bfe4cebf39f8, type: 3}
       propertyPath: m_Extents.x
@@ -335,7 +329,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6869473573709951596, guid: f6f68926f2a1b994ca09bfe4cebf39f8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.000012397766
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6869473573709951596, guid: f6f68926f2a1b994ca09bfe4cebf39f8, type: 3}
       propertyPath: m_LocalPosition.y
@@ -343,7 +337,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6869473573709951596, guid: f6f68926f2a1b994ca09bfe4cebf39f8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6869473573709951596, guid: f6f68926f2a1b994ca09bfe4cebf39f8, type: 3}
       propertyPath: m_LocalRotation.w
@@ -423,6 +417,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6061446513133512918, guid: f6f68926f2a1b994ca09bfe4cebf39f8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1477542590385910175}
+    - targetCorrespondingSourceObject: {fileID: 6061446513133512918, guid: f6f68926f2a1b994ca09bfe4cebf39f8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9143649880471441836}
+    - targetCorrespondingSourceObject: {fileID: 6061446513133512918, guid: f6f68926f2a1b994ca09bfe4cebf39f8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 896022505690160912}
   m_SourcePrefab: {fileID: 100100000, guid: f6f68926f2a1b994ca09bfe4cebf39f8, type: 3}
 --- !u!1 &1579698344444185525 stripped
 GameObject:
@@ -439,12 +439,38 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 1
-  m_Extents: {x: 7.5, y: 10, z: 15}
+  m_Extents: {x: 0.00001, y: 10, z: 10}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
   m_Center: {x: -17.5, y: 5, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &9143649880471441836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1579698344444185525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80ce6852b6c323b49900996115b21bef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyBarrierTrigger
+  barrierRoot: {fileID: 550309200639513400}
+--- !u!114 &896022505690160912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1579698344444185525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acd2f79b55fac254fb0d4f901cdf3b6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BarrierHealth
+  maxHealth: 200
 --- !u!4 &2208989137853092111 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6869473573709951596, guid: f6f68926f2a1b994ca09bfe4cebf39f8, type: 3}

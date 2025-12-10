@@ -10,6 +10,7 @@ TagManager:
   - Base
   - Deployable
   - Barrier
+  - Collectable
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - Barrier
   - Player
   - Base
-  - 
+  - Collectable
   - 
   - 
   - 

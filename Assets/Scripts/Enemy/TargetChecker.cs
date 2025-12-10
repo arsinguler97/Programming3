@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections.Generic;
 
 public class TargetChecker : MonoBehaviour
 {
@@ -10,8 +11,6 @@ public class TargetChecker : MonoBehaviour
 
     private Transform playerTransform;
     private Transform baseTransform;
-
-    private readonly Collider[] _barrierResults = new Collider[20];
 
     public void SetTargets(Transform player, Transform baseT)
     {
@@ -90,53 +89,94 @@ public class TargetChecker : MonoBehaviour
         return path.status != NavMeshPathStatus.PathComplete;
     }
 
-    public bool TryGetBlockingBarrier(out Transform barrier)
+    public bool TryGetClosestBlockingBarrier(out Transform barrier)
     {
         barrier = null;
 
         if (baseTransform == null) return false;
 
+        return TryGetNearestBarrier(out barrier);
+    }
+
+    public bool HasPathTo(Vector3 targetPosition)
+    {
         NavMeshPath path = new NavMeshPath();
-        if (!NavMesh.CalculatePath(transform.position, baseTransform.position, NavMesh.AllAreas, path))
-            return false;
+        bool found = NavMesh.CalculatePath(transform.position, targetPosition, NavMesh.AllAreas, path);
+        return found && path.status == NavMeshPathStatus.PathComplete;
+    }
 
-        for (int i = 0; i < path.corners.Length - 1; i++)
+    public bool TryGetReachablePointNearBarrier(Transform barrier, float radius, Vector3 fromPosition, out Vector3 point)
+    {
+        point = barrier.position;
+        if (barrier == null) return false;
+
+        float r = Mathf.Max(radius, 0.1f);
+
+        // Sample right at barrier position within given radius
+        if (NavMesh.SamplePosition(barrier.position, out NavMeshHit hit, r, NavMesh.AllAreas))
         {
-            Vector3 start = path.corners[i];
-            Vector3 end = path.corners[i + 1];
-
-            Vector3 dir = (end - start).normalized;
-            float dist = Vector3.Distance(start, end);
-
-            if (Physics.Raycast(start, dir, out RaycastHit hit, dist, barrierMask))
+            if (Vector3.Distance(hit.position, barrier.position) <= r && HasPath(fromPosition, hit.position))
             {
-                barrier = hit.transform;
+                point = hit.position;
+                Debug.Log($"{name}: nav point near barrier {barrier.name} found at {point} (r={r})");
                 return true;
             }
         }
 
-        return false;
-    }
-
-    public bool TryGetNearestBarrier(out Transform barrierTransform)
-    {
-        barrierTransform = null;
-
-        int count = Physics.OverlapSphereNonAlloc(transform.position, viewRadius, _barrierResults, barrierMask);
-
-        float best = Mathf.Infinity;
-
-        for (int i = 0; i < count; i++)
+        // If radius is zero or too tight and we failed, try a tiny offset around barrier within the same r
+        Vector3[] offsets = new Vector3[]
         {
-            float dist = Vector3.Distance(transform.position, _barrierResults[i].transform.position);
+            Vector3.forward, Vector3.back, Vector3.left, Vector3.right
+        };
 
-            if (dist < best)
+        for (int i = 0; i < offsets.Length; i++)
+        {
+            Vector3 samplePos = barrier.position + offsets[i] * r;
+            if (NavMesh.SamplePosition(samplePos, out NavMeshHit offsetHit, r, NavMesh.AllAreas))
             {
-                best = dist;
-                barrierTransform = _barrierResults[i].transform;
+                if (Vector3.Distance(offsetHit.position, barrier.position) <= r && HasPath(fromPosition, offsetHit.position))
+                {
+                    point = offsetHit.position;
+                    Debug.Log($"{name}: nav point offset near barrier {barrier.name} found at {point}");
+                    return true;
+                }
             }
         }
 
-        return barrierTransform != null;
+        Debug.Log($"{name}: no reachable nav point near barrier {barrier.name}");
+        return false;
     }
+
+    public bool TryGetNearestBarrier(out Transform barrier)
+    {
+        barrier = null;
+        GameObject[] barriers = GameObject.FindGameObjectsWithTag("Barrier");
+        float best = Mathf.Infinity;
+
+        foreach (var go in barriers)
+        {
+            float dist = Vector3.Distance(transform.position, go.transform.position);
+            if (dist < best)
+            {
+                best = dist;
+                barrier = go.transform;
+            }
+        }
+
+        if (barrier != null)
+            Debug.Log($"{name}: nearest barrier fallback {barrier.name} at dist {Vector3.Distance(transform.position, barrier.position):F1}");
+        else
+            Debug.Log($"{name}: no barrier found with tag Barrier");
+
+        return barrier != null;
+    }
+
+    private bool HasPath(Vector3 from, Vector3 to)
+    {
+        NavMeshPath path = new NavMeshPath();
+        if (!NavMesh.CalculatePath(from, to, NavMesh.AllAreas, path))
+            return false;
+        return path.status == NavMeshPathStatus.PathComplete;
+    }
+
 }

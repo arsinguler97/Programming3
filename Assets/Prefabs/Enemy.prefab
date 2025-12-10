@@ -272,6 +272,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 95fc980a97faa7a41a801b68f17e2607, type: 2}
+  - {fileID: 2100000, guid: 95fc980a97faa7a41a801b68f17e2607, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -331,7 +332,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 1
+  m_StoppingDistance: 1.8
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -356,6 +357,7 @@ MonoBehaviour:
   attackRange: 2
   attackCooldown: 2
   chaseSpeed: 5
+  barrierApproachRadius: 5
 --- !u!114 &3191655140922098085
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -376,6 +378,8 @@ MonoBehaviour:
     m_Bits: 256
   viewRadius: 30
   viewAngle: 120
+  barrierLineCheckRadius: 3
+  barrierLineTolerance: 5
 --- !u!114 &7987583133356543800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -411,8 +415,8 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 64
   m_CollisionDetection: 1
@@ -428,6 +432,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86fd675f23ac33044a6acd3b091ad999, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  enemyRenderer: {fileID: 5394758797132817542}
+  secondaryBaseMaterial: {fileID: 2100000, guid: 95fc980a97faa7a41a801b68f17e2607, type: 2}
+  fireMaterial: {fileID: 2100000, guid: 2c420724f5bf46241bc8d1d616c65653, type: 2}
+  iceMaterial: {fileID: 2100000, guid: e8a7db8bb30ba7846922a11cebbe1a2f, type: 2}
+  fireEffectDuration: 0.35
+  iceEffectDuration: 1.5
   enemyMaxHealth: 30
   collectablePrefab: {fileID: 403944087689995873, guid: 087aabc3e71a0cc40bbd7b20b885f87e, type: 3}
   dropOffset: {x: 0, y: 0.5, z: 0}

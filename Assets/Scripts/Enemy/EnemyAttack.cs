@@ -9,6 +9,8 @@ public class EnemyAttack : MonoBehaviour
     [SerializeField] private float attackRadius = 2f; 
     [SerializeField] private LayerMask targetMask;
 
+    public float AttackRadius => attackRadius;
+
     private Transform _pivot;
     private bool _isAttacking;
     private int _phase;
@@ -67,11 +69,12 @@ public class EnemyAttack : MonoBehaviour
 
     private void ApplyDamage()
     {
-        int count = Physics.OverlapSphereNonAlloc(transform.position, attackRadius, _results, targetMask);
+        int count = Physics.OverlapSphereNonAlloc(transform.position, attackRadius, _results, ~0, QueryTriggerInteraction.Collide);
 
-        Transform barrierTransform = null;
+        BarrierHealth barrierHealth = null;
         PlayerHealth playerHealth = null;
         BaseHealth baseHealth = null;
+        bool logged = false;
 
         for (int i = 0; i < count; i++)
         {
@@ -79,34 +82,45 @@ public class EnemyAttack : MonoBehaviour
 
             if (hit.CompareTag("Barrier"))
             {
-                barrierTransform = hit.transform;
+                barrierHealth = hit.GetComponent<BarrierHealth>() ?? hit.GetComponentInParent<BarrierHealth>();
+                logged = true;
             }
             else if (hit.CompareTag("Player"))
             {
                 playerHealth = hit.GetComponent<PlayerHealth>();
+                logged = true;
             }
             else if (hit.CompareTag("Base"))
             {
                 baseHealth = hit.GetComponent<BaseHealth>();
+                logged = true;
             }
         }
 
-        if (barrierTransform != null)
+        if (barrierHealth != null)
         {
-            barrierTransform.GetComponent<Barrier>().TakeDamage(damageAmount);
+            barrierHealth.TakeDamage(damageAmount);
+            Debug.Log($"{name} hit Barrier {barrierHealth.name} for {damageAmount}");
             return;
         }
 
         if (playerHealth != null)
         {
             playerHealth.TakeDamage(damageAmount);
+            Debug.Log($"{name} hit Player for {damageAmount}");
             return;
         }
 
         if (baseHealth != null)
         {
             baseHealth.TakeDamage(damageAmount);
+            Debug.Log($"{name} hit Base for {damageAmount}");
             return;
+        }
+
+        if (!logged)
+        {
+            Debug.Log($"{name} attack missed; no targets in radius {attackRadius} at {transform.position}");
         }
     }
 

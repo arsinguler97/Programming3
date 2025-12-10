@@ -15,25 +15,13 @@ public class EnemyChaseState : IState
         _enemyStateManager.EnemyController.SetSpeed(_enemyStateManager.ChaseSpeed);
     }
 
-    public void Exit() { }
+    public void Exit() { _enemyStateManager.EnemyController.ResetStoppingDistance(); }
 
     public void Update()
     {
         if (_enemyStateManager.TargetChecker.IsPathToBaseBlocked())
         {
-            if (_enemyStateManager.TargetChecker.TryGetBlockingBarrier(out Transform blockingBarrier))
-            {
-                _enemyStateManager.EnemyController.MoveTo(blockingBarrier.position);
-                return;
-            }
-
-            if (_enemyStateManager.TargetChecker.TryGetNearestBarrier(out Transform anyBarrier))
-            {
-                _enemyStateManager.EnemyController.MoveTo(anyBarrier.position);
-                return;
-            }
-
-            _enemyStateManager.ChangeState(_enemyStateManager.EnemyPatrolState);
+            _enemyStateManager.ChangeState(_enemyStateManager.EnemyBarrierState);
             return;
         }
 
@@ -45,6 +33,7 @@ public class EnemyChaseState : IState
                 return;
             }
 
+            _enemyStateManager.EnemyController.SetStoppingDistance(_enemyStateManager.AttackRange * 0.8f);
             _enemyStateManager.EnemyController.MoveTo(_enemyStateManager.TargetChecker.GetBasePosition());
             return;
         }
@@ -57,6 +46,7 @@ public class EnemyChaseState : IState
                 return;
             }
 
+            _enemyStateManager.EnemyController.SetStoppingDistance(_enemyStateManager.AttackRange * 0.5f);
             _enemyStateManager.EnemyController.MoveTo(_enemyStateManager.TargetChecker.GetPlayerPosition());
             return;
         }

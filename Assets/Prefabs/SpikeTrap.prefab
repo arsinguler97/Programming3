@@ -206,6 +206,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpikeTrap
   cost: 20
   damage: 20
+  hitVfxPrefab: {fileID: 2793345830866706014, guid: 6f7de09ba31cd5b45aa2e61acb319368, type: 3}
+  vfxHeight: 0.75
 --- !u!65 &2035489115710388449
 BoxCollider:
   m_ObjectHideFlags: 0

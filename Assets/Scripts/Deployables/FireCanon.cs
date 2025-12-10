@@ -51,9 +51,12 @@ public class FireCannon : DeployableBase
             var hit = _results[i];
             if (hit.CompareTag("Enemy"))
             {
-                var e = hit.GetComponent<EnemyHealth>();
+                var e = hit.GetComponent<EnemyHealth>() ?? hit.GetComponentInParent<EnemyHealth>();
                 if (e != null)
+                {
                     e.EnemyTakeDamage(amount);
+                    e.ShowFireEffect();
+                }
             }
         }
     }

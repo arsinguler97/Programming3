@@ -11,14 +11,13 @@ public class EnemyPatrolState : IState
 
     public void Enter()
     {
-        Debug.Log("Entered MoveToBase State");
         _enemyStateManager.EnemyController.ResumeMoving();
         _enemyStateManager.EnemyController.MoveTo(_enemyStateManager.TargetChecker.GetBasePosition());
     }
 
     public void Exit()
     {
-        Debug.Log("Exiting MoveToBase State");
+        _enemyStateManager.EnemyController.ResetStoppingDistance();
     }
 
     public void Update()

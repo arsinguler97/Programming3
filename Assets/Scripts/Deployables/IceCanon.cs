@@ -43,17 +43,18 @@ public class IceCannon : DeployableBase
             if (!hit.CompareTag("Enemy")) continue;
 
             var enemy = hit.GetComponent<EnemyController>();
+            var health = hit.GetComponent<EnemyHealth>() ?? hit.GetComponentInParent<EnemyHealth>();
             if (enemy == null) continue;
 
             if (!_activeSlows.ContainsKey(enemy))
             {
-                Coroutine c = StartCoroutine(ApplySlow(enemy));
+                Coroutine c = StartCoroutine(ApplySlow(enemy, health));
                 _activeSlows.Add(enemy, c);
             }
         }
     }
 
-    private IEnumerator ApplySlow(EnemyController enemy)
+    private IEnumerator ApplySlow(EnemyController enemy, EnemyHealth enemyHealth)
     {
         if (enemy == null)
         {
@@ -63,10 +64,16 @@ public class IceCannon : DeployableBase
         float originalSpeed = enemy.AgentSpeed;
         enemy.SetSpeed(originalSpeed * slowAmount);
 
+        if (enemyHealth != null)
+            enemyHealth.ShowIceEffect(slowDuration);
+
         yield return new WaitForSeconds(slowDuration);
 
         if (enemy != null)
             enemy.SetSpeed(originalSpeed);
+
+        if (enemyHealth != null)
+            enemyHealth.ResetSecondaryMaterial();
 
         _activeSlows.Remove(enemy);
     }
