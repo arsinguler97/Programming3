@@ -8,12 +8,25 @@ public class WaveManager : Singleton<WaveManager>
     [SerializeField] private int totalEnemiesToSpawn = 10;
     [SerializeField] private float spawnInterval = 5f;
 
+    [Header("Wave Scaling")]
+    [SerializeField] private int enemiesIncrementPerWave = 10;
+    [SerializeField] private float spawnIntervalDecrease = 1f;
+    [SerializeField] private float minSpawnInterval = 1f;
+
     [Header("Spawn Points")]
     [SerializeField] private Transform[] spawnPoints;
 
     private int _currentWave;
     private int _spawnedEnemies;
     private int _aliveEnemies;
+    private int _initialTotalEnemiesToSpawn;
+    private float _initialSpawnInterval;
+
+    private void Start()
+    {
+        _initialTotalEnemiesToSpawn = totalEnemiesToSpawn;
+        _initialSpawnInterval = spawnInterval;
+    }
 
     public void StartWaves()
     {
@@ -48,8 +61,8 @@ public class WaveManager : Singleton<WaveManager>
 
             Debug.Log($"Wave {_currentWave} finished!");
 
-            totalEnemiesToSpawn += 10;
-            spawnInterval = Mathf.Max(1f, spawnInterval - 1f);
+            totalEnemiesToSpawn += enemiesIncrementPerWave;
+            spawnInterval = Mathf.Max(minSpawnInterval, spawnInterval - spawnIntervalDecrease);
             yield return new WaitForSeconds(3f);
         }
 
@@ -88,7 +101,7 @@ public class WaveManager : Singleton<WaveManager>
     {
         StopAllCoroutines();
         _currentWave = 0;
-        totalEnemiesToSpawn = 10;
-        spawnInterval = 5f;
+        totalEnemiesToSpawn = _initialTotalEnemiesToSpawn;
+        spawnInterval = _initialSpawnInterval;
     }
 }

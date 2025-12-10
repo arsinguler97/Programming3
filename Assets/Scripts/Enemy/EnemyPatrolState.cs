@@ -22,6 +22,12 @@ public class EnemyPatrolState : IState
 
     public void Update()
     {
+        if (_enemyStateManager.TargetChecker.IsPathToBaseBlocked())
+        {
+            _enemyStateManager.ChangeState(_enemyStateManager.EnemyBarrierState);
+            return;
+        }
+        
         if (_enemyStateManager.TargetChecker.IsPlayerInRange())
         {
             _enemyStateManager.ChangeState(_enemyStateManager.EnemyChaseState);
