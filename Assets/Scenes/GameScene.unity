@@ -4796,6 +4796,9 @@ MonoBehaviour:
   waveCount: 5
   totalEnemiesToSpawn: 5
   spawnInterval: 10
+  enemiesIncrementPerWave: 5
+  spawnIntervalDecrease: 1
+  minSpawnInterval: 1
   spawnPoints:
   - {fileID: 571814243}
   - {fileID: 321200333}
