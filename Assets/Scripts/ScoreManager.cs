@@ -51,6 +51,6 @@ public class ScoreManager : MonoBehaviour
     private void UpdateUI()
     {
         if (scoreText != null)
-            scoreText.text = "Gold: " + _score;
+            scoreText.text = "" + _score;
     }
 }

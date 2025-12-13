@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class WaveManager : Singleton<WaveManager>
 {
@@ -15,17 +16,38 @@ public class WaveManager : Singleton<WaveManager>
 
     [Header("Spawn Points")]
     [SerializeField] private Transform[] spawnPoints;
+    [SerializeField] private WaveUI waveUI; // Optional manual assignment to avoid timing issues
 
     private int _currentWave;
     private int _spawnedEnemies;
     private int _aliveEnemies;
     private int _initialTotalEnemiesToSpawn;
     private float _initialSpawnInterval;
+    private WaveUI _waveUI;
+    private float _spawnRateMultiplier = 1f;
 
     private void Start()
     {
         _initialTotalEnemiesToSpawn = totalEnemiesToSpawn;
         _initialSpawnInterval = spawnInterval;
+
+        ResolveWaveUI();
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        ResolveWaveUI();
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        ResolveWaveUI();
     }
 
     public void StartWaves()
@@ -41,9 +63,12 @@ public class WaveManager : Singleton<WaveManager>
             _spawnedEnemies = 0;
             _aliveEnemies = 0;
 
-            WaveUI ui = FindFirstObjectByType<WaveUI>();
-            if (ui != null)
-                ui.UpdateWave(_currentWave, totalEnemiesToSpawn);
+            ResolveWaveUI();
+            if (_waveUI != null)
+            {
+                _waveUI.UpdateWave(_currentWave, waveCount);
+                UpdateRemainingEnemiesUI();
+            }
 
             while (_spawnedEnemies < totalEnemiesToSpawn)
             {
@@ -51,10 +76,10 @@ public class WaveManager : Singleton<WaveManager>
                 _spawnedEnemies++;
                 _aliveEnemies++;
 
-                if (ui != null)
-                    ui.UpdateProgress(totalEnemiesToSpawn - _spawnedEnemies);
+                if (_waveUI != null)
+                    UpdateRemainingEnemiesUI();
 
-                yield return new WaitForSeconds(spawnInterval);
+                yield return new WaitForSeconds(GetCurrentSpawnDelay());
             }
 
             yield return new WaitUntil(() => _aliveEnemies <= 0);
@@ -71,6 +96,8 @@ public class WaveManager : Singleton<WaveManager>
 
     private void SpawnEnemy()
     {
+        ResolveWaveUI();
+
         if (spawnPoints.Length == 0)
         {
             Debug.LogWarning("No spawn points assigned!");
@@ -95,6 +122,7 @@ public class WaveManager : Singleton<WaveManager>
     private void HandleEnemyDeath()
     {
         _aliveEnemies--;
+        UpdateRemainingEnemiesUI();
     }
 
     public void ResetWaves()
@@ -103,5 +131,49 @@ public class WaveManager : Singleton<WaveManager>
         _currentWave = 0;
         totalEnemiesToSpawn = _initialTotalEnemiesToSpawn;
         spawnInterval = _initialSpawnInterval;
+
+        if (_waveUI != null)
+        {
+            _waveUI.UpdateWave(0, waveCount);
+            _waveUI.UpdateRemainingEnemies(0);
+        }
+    }
+
+    private void UpdateRemainingEnemiesUI()
+    {
+        int remainingEnemies = totalEnemiesToSpawn - _spawnedEnemies + _aliveEnemies;
+        remainingEnemies = Mathf.Max(remainingEnemies, 0);
+
+        _waveUI?.UpdateRemainingEnemies(remainingEnemies);
+    }
+
+    private float GetCurrentSpawnDelay()
+    {
+        float delay = spawnInterval * _spawnRateMultiplier;
+        return Mathf.Max(minSpawnInterval, delay);
+    }
+
+    public void SetSpawnRateMultiplier(float multiplier)
+    {
+        // Prevent zero or negative multipliers.
+        _spawnRateMultiplier = Mathf.Max(0.01f, multiplier);
+    }
+
+    public void SetSpawnDelaySlower50() => SetSpawnRateMultiplier(1.5f);   // +50%
+    public void SetSpawnDelaySlower100() => SetSpawnRateMultiplier(2f);   // +100%
+    public void SetSpawnDelayNormal() => SetSpawnRateMultiplier(1f);      // default
+    public void SetSpawnDelayFaster50() => SetSpawnRateMultiplier(0.5f);  // -50%
+
+    private void ResolveWaveUI()
+    {
+        if (_waveUI != null)
+            return;
+
+        _waveUI = waveUI != null ? waveUI : FindFirstObjectByType<WaveUI>();
+        if (_waveUI != null)
+        {
+            _waveUI.UpdateWave(_currentWave, waveCount);
+            _waveUI.UpdateRemainingEnemies(totalEnemiesToSpawn - _spawnedEnemies + _aliveEnemies);
+        }
     }
 }

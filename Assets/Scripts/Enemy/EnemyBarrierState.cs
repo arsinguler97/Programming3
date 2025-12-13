@@ -62,7 +62,6 @@ public class EnemyBarrierState : IState
         }
         else
         {
-            // Navmesh point not found; try moving directly to barrier position
             _enemyStateManager.EnemyController.SetStoppingDistance(attackDistance * 0.8f);
             _enemyStateManager.EnemyController.MoveTo(targetPos);
             if (Time.time - _lastMoveLogTime > 0.5f)

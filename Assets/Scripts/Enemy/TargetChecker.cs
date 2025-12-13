@@ -112,7 +112,6 @@ public class TargetChecker : MonoBehaviour
 
         float r = Mathf.Max(radius, 0.1f);
 
-        // Sample right at barrier position within given radius
         if (NavMesh.SamplePosition(barrier.position, out NavMeshHit hit, r, NavMesh.AllAreas))
         {
             if (Vector3.Distance(hit.position, barrier.position) <= r && HasPath(fromPosition, hit.position))
@@ -123,7 +122,6 @@ public class TargetChecker : MonoBehaviour
             }
         }
 
-        // If radius is zero or too tight and we failed, try a tiny offset around barrier within the same r
         Vector3[] offsets = new Vector3[]
         {
             Vector3.forward, Vector3.back, Vector3.left, Vector3.right
@@ -178,5 +176,4 @@ public class TargetChecker : MonoBehaviour
             return false;
         return path.status == NavMeshPathStatus.PathComplete;
     }
-
 }

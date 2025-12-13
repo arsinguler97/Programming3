@@ -20,7 +20,6 @@ public class EnemyAttackState : IState
         _enemyStateManager.EnemyController.StopMoving();
         _lastDebugLogTime = -999f;
 
-        // Face the current barrier target once on entry
         Transform barrier = _enemyStateManager.CurrentBarrierTarget;
         if (barrier != null)
         {

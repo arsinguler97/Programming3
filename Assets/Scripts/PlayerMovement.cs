@@ -23,11 +23,13 @@ public class PlayerMovement : MonoBehaviour
     private bool _isAiming;
 
     private DeployManager _deployManager;
+    private PlayerStamina _stamina;
 
     void Awake()
     {
         _controller = GetComponent<CharacterController>();
         _deployManager = FindFirstObjectByType<DeployManager>();
+        _stamina = GetComponent<PlayerStamina>();
     }
 
     public void SetMove(InputAction.CallbackContext context)
@@ -48,13 +50,19 @@ public class PlayerMovement : MonoBehaviour
     public void SetJump(InputAction.CallbackContext context)
     {
         if (context.performed && _controller.isGrounded)
-            _velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+        {
+            bool canJump = _stamina == null || _stamina.TryConsumeJump();
+            if (canJump)
+                _velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+        }
     }
 
     public void SetSprint(InputAction.CallbackContext context)
     {
-        if (context.started) _isSprinting = true;
-        if (context.canceled) _isSprinting = false;
+        if (context.started)
+            _isSprinting = _stamina == null || _stamina.CanStartSprint();
+        if (context.canceled)
+            _isSprinting = false;
     }
 
     public void DeployFireCannon(InputAction.CallbackContext ctx)
@@ -91,6 +99,15 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (_stamina != null)
+        {
+            if (_isSprinting && !_stamina.HasStamina)
+                _isSprinting = false;
+
+            _stamina.SetSprinting(_isSprinting);
+            _stamina.SetAiming(_isAiming);
+        }
+
         Vector3 camForward = cameraTransform.forward;
         Vector3 camRight = cameraTransform.right;
 

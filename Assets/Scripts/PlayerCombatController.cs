@@ -10,10 +10,12 @@ public class PlayerCombatController : MonoBehaviour
 
     private bool _isAiming;
     private PlayerMovement _playerMovement;
+    private PlayerStamina _stamina;
 
     void Start()
     {
         _playerMovement = GetComponent<PlayerMovement>();
+        _stamina = GetComponent<PlayerStamina>();
 
         if (crosshair != null)
             crosshair.SetActive(false);
@@ -23,9 +25,13 @@ public class PlayerCombatController : MonoBehaviour
     {
         if (ctx.performed)
         {
+            if (_stamina != null && !_stamina.TryConsumeAimStart())
+                return;
+
             _isAiming = true;
             _playerMovement?.SetAiming(true);
             bowController.EnterAimMode();
+            _stamina?.SetAiming(true);
             if (crosshair != null) crosshair.SetActive(true);
         }
         else if (ctx.canceled)
@@ -33,6 +39,7 @@ public class PlayerCombatController : MonoBehaviour
             _isAiming = false;
             _playerMovement?.SetAiming(false);
             bowController.ExitAimMode();
+            _stamina?.SetAiming(false);
             if (crosshair != null) crosshair.SetActive(false);
         }
     }
@@ -41,7 +48,9 @@ public class PlayerCombatController : MonoBehaviour
     {
         if (!_isAiming && ctx.performed)
         {
-            meleeAttack.TryAttack();
+            bool canAttack = _stamina == null || _stamina.TryConsumeMelee();
+            if (canAttack)
+                meleeAttack.TryAttack();
         }
     }
 

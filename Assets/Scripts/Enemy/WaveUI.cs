@@ -6,32 +6,27 @@ public class WaveUI : MonoBehaviour
 {
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI waveText;
-    [SerializeField] private Slider waveProgressSlider;
+    [SerializeField] private TextMeshProUGUI remainingEnemiesText;
 
     private void Start()
     {
-        if (waveText != null)
-            waveText.text = "Wave: 0";
+        // Only initialize if nothing is set yet, to avoid overwriting WaveManager's early updates.
+        if (waveText != null && string.IsNullOrEmpty(waveText.text))
+            waveText.text = "0/0";
 
-        if (waveProgressSlider != null)
-            waveProgressSlider.value = 1f;
+        if (remainingEnemiesText != null && string.IsNullOrEmpty(remainingEnemiesText.text))
+            remainingEnemiesText.text = "0";
     }
 
-    public void UpdateWave(int waveNumber, int totalEnemies)
+    public void UpdateWave(int currentWave, int totalWaves)
     {
         if (waveText != null)
-            waveText.text = $"Wave: {waveNumber}";
-
-        if (waveProgressSlider != null)
-        {
-            waveProgressSlider.maxValue = totalEnemies;
-            waveProgressSlider.value = totalEnemies;
-        }
+            waveText.text = $"{currentWave}/{totalWaves}";
     }
 
-    public void UpdateProgress(int remainingEnemies)
+    public void UpdateRemainingEnemies(int remainingEnemies)
     {
-        if (waveProgressSlider != null)
-            waveProgressSlider.value = remainingEnemies;
+        if (remainingEnemiesText != null)
+            remainingEnemiesText.text = remainingEnemies.ToString();
     }
 }
